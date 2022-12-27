@@ -33,14 +33,14 @@ const personGenerator = { // при count = 17 при методе Math.floor id
             "id_7": "Михаил",
             "id_8": "Даниил",
             "id_9": "Егор",
-            "id_10": "Владимир",
+            "id_10": "Андрей",
             "id_11": "Антон",
             "id_12": "Чеслав",
             "id_13": "Вадим",
-            "id_14": "Пётр",
+            "id_14": "Алексей",
             "id_15": "Денис",
-            "id_16": "Афанасий",
-            "id_17": "Аркадий"
+            "id_16": "Владимир",
+            "id_17": "Сергей"
         }
     }`,
     firstNameFemaleJson: `{
@@ -64,29 +64,7 @@ const personGenerator = { // при count = 17 при методе Math.floor id
             "id_16": "Василиса",
             "id_17": "Глафира"
         }
-    }`,
-    patronymicJson: `{
-        "count": 18,
-        "list": {
-            "id_1": "Владимиров",
-            "id_2": "Алексеев",
-            "id_3": "Сергеев",
-            "id_4": "Петров",
-            "id_5": "Андреев",
-            "id_6": "Михайлов",
-            "id_7": "Иванов",
-            "id_8": "Александров",
-            "id_9": "Анатольев",
-            "id_10": "Вадимов",
-            "id_11": "Аркадьев",
-            "id_12": "Афанасьев",
-            "id_13": "Денисов",
-            "id_14": "Чеславов",
-            "id_15": "Данилов",
-            "id_16": "Антонов",
-            "id_17": "Артемов"
-        }
-    }`,
+    }`,    
     professionMaleJson: `{
         "count": 18,
         "list": {
@@ -156,10 +134,29 @@ const personGenerator = { // при count = 17 при методе Math.floor id
     },
 
     randomPatronymic: function() { // метод генерации отчества
-        if (this.person.gender == 'Мужской, ') {
-            return this.randomValue(this.patronymicJson) + "ич";
+        let firstName = this.randomValue(this.firstNameMaleJson); // ловим Имя для генерации Отчества
+        let lengthFirstName = (firstName.length); // ловим длинну слова
+        let endLetter = firstName[lengthFirstName - 1]; // ловим последнюю букву в имени
+        switch (endLetter) { // делаем условия для отлова имен с окончанием на "й" и "а"
+            case 'й':
+            case 'а':
+                nameConst = firstName.substring(0, lengthFirstName - 1); // отнимаем окончание для составления отчества
+                break;
+            default:
+                nameConst = firstName; // оставляем без изменений для простых Имен
+        }
+        if (this.person.gender == 'Мужской, ' && endLetter == 'й') { // пишем условия для получения нужного отчества
+            return nameConst + 'евич';
+        } else if (this.person.gender == 'Мужской, ' && endLetter == 'а') {
+            return nameConst + "ич";
+        } else if (endLetter == 'й') {
+            return nameConst + "евна";
+        } else if (endLetter == 'а') {
+            return nameConst + "ична";
+        } else if (this.person.gender == 'Мужской, ') {
+            return nameConst + "ович";
         } else {
-            return this.randomValue(this.patronymicJson) + "на";
+            return nameConst + "овна";
         }
     },
 
@@ -206,6 +203,7 @@ const personGenerator = { // при count = 17 при методе Math.floor id
         this.person.surname = this.randomSurname();
         this.person.firstName = this.randomFirstName();
         this.person.patronymic = this.randomPatronymic();
+        let mon = Math.floor(Math.random() * 3);
         if (mon === 0) { // переменная в файле init.js
             this.person.month = this.randomMonth31();
             this.person.day = this.randomIntNumber(1, 31);

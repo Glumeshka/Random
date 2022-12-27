@@ -2,10 +2,9 @@ window.onload = function() { // запуск при первом открыва�
     getInit();
 }
 
-let mon, initPerson; // обявляем глобальные переменные
+let initPerson, nameConst; // обявляем глобальные переменные
 
 function getInit() { // функция для запуска скрипта
-    mon = Math.floor(Math.random() * 3); //переменная необходимая для получения генерации месяца и дня 
     initPerson = personGenerator.getPerson();
     document.querySelector('#surnameOutput').innerText = initPerson.surname;
     document.querySelector('#firstNameOutput').innerText = initPerson.firstName;
